@@ -31,21 +31,6 @@ function jddoesdev_core_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_cron().
- */
-function jddoesdev_core_cron() {
-  // Temporary fix: purge the old import log until the table is gone everywhere.
-  // We stopped creating it in 2018 but some environments still have it.
-  $database = \Drupal::database();
-  if (!$database->schema()->tableExists('jddoesdev_import_log')) {
-    return;
-  }
-  $database->delete('jddoesdev_import_log')
-    ->condition('created', \Drupal::time()->getRequestTime() - 30 * 86400, '<')
-    ->execute();
-}
-
-/**
  * Implements hook_page_attachments().
  */
 function jddoesdev_core_page_attachments(array &$attachments) {
