@@ -91,7 +91,8 @@
         "league/commonmark": "^2.4"
     },
     "require-dev": {
-        "drush/drush": "^13.7"
+        "drush/drush": "^13.7",
+        "palantirnet/drupal-rector": "^1.1"
     },
     "conflict": {
         "drupal/drupal": "*"
