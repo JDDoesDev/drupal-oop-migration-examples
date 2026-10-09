@@ -1,0 +1,13 @@
+_core:
+  default_config_hash: DDusbQGFi8CSVYRMYZCmaU16kQMrQeURTMyNAXKc4Jw
+favicon:
+  use_default: true
+features:
+  comment_user_picture: true
+  comment_user_verification: true
+  favicon: true
+  node_user_picture: true
+logo:
+  path: themes/contrib/forma_theme/forma.svg
+  use_default: true
+scheme: light

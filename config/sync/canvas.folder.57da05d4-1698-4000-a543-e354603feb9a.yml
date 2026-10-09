@@ -1,0 +1,23 @@
+uuid: 57da05d4-1698-4000-a543-e354603feb9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - canvas.component.sdc.forma_theme.accordion
+    - canvas.component.sdc.forma_theme.accordion-container
+    - canvas.component.sdc.forma_theme.footer
+    - canvas.component.sdc.forma_theme.grid
+    - canvas.component.sdc.forma_theme.group
+    - canvas.component.sdc.forma_theme.navbar
+    - canvas.component.sdc.forma_theme.section
+name: Layout
+configEntityTypeId: component
+weight: 0
+items:
+  - sdc.forma_theme.accordion
+  - sdc.forma_theme.accordion-container
+  - sdc.forma_theme.footer
+  - sdc.forma_theme.grid
+  - sdc.forma_theme.group
+  - sdc.forma_theme.navbar
+  - sdc.forma_theme.section

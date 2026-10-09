@@ -1,0 +1,12 @@
+uuid: da613e53-ab9e-4e44-b02b-064e57d740ae
+langcode: en
+status: true
+dependencies:
+  module:
+    - canvas
+    - trash
+id: canvas_page_purge_action
+label: 'Permanently delete page'
+type: canvas_page
+plugin: 'entity:purge_action:canvas_page'
+configuration: {  }
