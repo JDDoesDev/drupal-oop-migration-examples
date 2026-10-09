@@ -5,9 +5,7 @@
  * Site-wide tweaks for the JD Does Dev site.
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -30,33 +28,6 @@ function jddoesdev_core_module_implements_alter(&$implementations, $hook) {
     unset($implementations['jddoesdev_core']);
     $implementations['jddoesdev_core'] = $group;
   }
-}
-
-/**
- * Implements hook_node_presave().
- */
-function jddoesdev_core_entity_presave(EntityInterface $entity) {
-  if ($entity->getEntityTypeId() != 'node') {
-    return;
-  }
-  $entity->setTitle(_jddoesdev_core_clean_title($entity->getTitle()));
-
-  if ($entity->bundle() == 'article' && $entity->get('field_description')->isEmpty() && !$entity->get('field_content')->isEmpty()) {
-    $text = strip_tags($entity->get('field_content')->value);
-    $entity->set('field_description', Unicode::truncate(trim($text), 200, TRUE, TRUE));
-  }
-
-  \Drupal::logger('jddoesdev_core')->notice('%title saved by %user.', [
-    '%title' => $entity->label(),
-    '%user' => \Drupal::currentUser()->getAccountName(),
-  ]);
-}
-
-/**
- * Tidies whitespace in a node title.
- */
-function _jddoesdev_core_clean_title($title) {
-  return preg_replace('/\s+/', ' ', trim($title));
 }
 
 /**
