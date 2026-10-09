@@ -20,25 +20,6 @@ function jddoesdev_core_uninstall() {
 }
 
 /**
- * Implements hook_requirements().
- */
-function jddoesdev_core_requirements($phase) {
-  $requirements = array();
-  if ($phase == 'runtime') {
-    // Added after the 2019 incident where stack traces showed on live.
-    if (\Drupal::config('system.logging')->get('error_level') == 'verbose') {
-      $requirements['jddoesdev_core_error_level'] = [
-        'title' => t('Error message display'),
-        'value' => t('Verbose'),
-        'description' => t('Error messages, including backtraces, are shown to site visitors. Switch this off on production.'),
-        'severity' => REQUIREMENT_WARNING,
-      ];
-    }
-  }
-  return $requirements;
-}
-
-/**
  * Set the default mail footer for sites installed before it existed.
  */
 function jddoesdev_core_update_8001() {
