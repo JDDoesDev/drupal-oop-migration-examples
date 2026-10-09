@@ -7,6 +7,10 @@ dependencies:
     - field.field.node.article.field_seo_description
     - field.field.node.article.field_seo_image
     - field.field.node.article.field_seo_title
+    - field.field.node.blog_post.field_seo_analysis
+    - field.field.node.blog_post.field_seo_description
+    - field.field.node.blog_post.field_seo_image
+    - field.field.node.blog_post.field_seo_title
     - field.field.node.page.field_seo_analysis
     - field.field.node.page.field_seo_description
     - field.field.node.page.field_seo_image

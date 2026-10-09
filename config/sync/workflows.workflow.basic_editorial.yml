@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - node.type.article
+    - node.type.blog_post
     - node.type.page
     - node.type.project
   module:
@@ -56,6 +57,7 @@ type_settings:
   entity_types:
     node:
       - article
+      - blog_post
       - page
       - project
   default_moderation_state: draft
