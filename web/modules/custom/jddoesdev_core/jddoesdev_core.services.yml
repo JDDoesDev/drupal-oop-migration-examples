@@ -1,0 +1,9 @@
+
+services:
+  Drupal\jddoesdev_core\Hook\JddoesdevCoreHooks:
+    class: Drupal\jddoesdev_core\Hook\JddoesdevCoreHooks
+    autowire: true
+
+  Drupal\jddoesdev_core\Hook\JddoesdevCoreTokensHooks:
+    class: Drupal\jddoesdev_core\Hook\JddoesdevCoreTokensHooks
+    autowire: true
