@@ -23,6 +23,9 @@ $RECYCLE.BIN/
 
 # Site-specific settings and files.
 /web/sites/*/settings*.php
+# Default settings.php holds no credentials (DDEV adds them in settings.ddev.php)
+# and sets config_sync_directory, so it travels with the repo.
+!/web/sites/default/settings.php
 /web/sites/*/services*.yml
 /web/sites/*/files
 /web/sites/*/private
@@ -39,3 +42,7 @@ $RECYCLE.BIN/
 /auth.json
 
 .omc
+
+# Database dump and files archive for moving the demo site between machines.
+/demo-assets/*
+!/demo-assets/README.md
