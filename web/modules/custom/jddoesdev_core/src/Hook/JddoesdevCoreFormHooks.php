@@ -6,6 +6,7 @@ namespace Drupal\jddoesdev_core\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order\Order;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -23,7 +24,7 @@ class JddoesdevCoreFormHooks {
   /**
    * Implements hook_form_alter().
    */
-  #[Hook('form_alter')]
+  #[Hook('form_alter', order: Order::Last)]
   public function formAlter(array &$form, FormStateInterface $form_state, string $form_id): void {
     if ($form_id == 'node_article_form' || $form_id == 'node_article_edit_form') {
       $name = $this->currentUser->getDisplayName();

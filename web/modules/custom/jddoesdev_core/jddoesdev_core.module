@@ -19,18 +19,6 @@ function jddoesdev_core_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_module_implements_alter().
- */
-function jddoesdev_core_module_implements_alter(&$implementations, $hook) {
-  // Our form_alter has to run after everything else, see #3012.
-  if ($hook == 'form_alter' && isset($implementations['jddoesdev_core'])) {
-    $group = $implementations['jddoesdev_core'];
-    unset($implementations['jddoesdev_core']);
-    $implementations['jddoesdev_core'] = $group;
-  }
-}
-
-/**
  * Implements hook_page_attachments().
  */
 function jddoesdev_core_page_attachments(array &$attachments) {
