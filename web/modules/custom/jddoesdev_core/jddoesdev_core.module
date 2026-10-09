@@ -33,22 +33,6 @@ function jddoesdev_core_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_preprocess_node().
- */
-function jddoesdev_core_preprocess_node(array &$variables) {
-  $node = $variables['node'];
-  if ($node->bundle() != 'blog_post' || $variables['view_mode'] != 'full') {
-    return;
-  }
-  $text = strip_tags((string) $node->get('field_content')->value);
-  $minutes = max(1, (int) ceil(str_word_count($text) / 200));
-  $variables['content']['jddoesdev_reading_time'] = [
-    '#markup' => '<p class="reading-time">' . t('@count min read', ['@count' => $minutes]) . '</p>',
-    '#weight' => -100,
-  ];
-}
-
-/**
  * Implements hook_node_presave().
  */
 function jddoesdev_core_entity_presave(EntityInterface $entity) {
