@@ -35,7 +35,18 @@ Calling Drupal\system\Element\StatusReportPage::preRenderCounters() with an arra
 Produced by: rendering the status report (`/admin/reports/status`) as admin.
 Using the `REQUIREMENT_WARNING` constant itself raises nothing. The constant
 is only marked `@deprecated` in a docblock. The notice comes from core
-converting its integer value when the page renders.
+converting integer severities to the enum when the page renders.
+
+**This notice is not ours alone.** The message doesn't name a module, and
+it fires if *any* requirement on the page has an integer severity. On this
+site, six runtime requirements do at demo-a: ours
+(`jddoesdev_core_error_level`, `1`) and five from contrib modules:
+`metatag_schema` (`-1`), `automatic_updates_status_check` (`0`),
+`webform_libraries` (`1`), `webform_email` (`0`) and
+`webform_file_private` (`1`). Converting our requirement to the enum
+(demo-g) does not make the notice go away on this site. To quote it as
+caused by jddoesdev_core, say that our `REQUIREMENT_WARNING` is one of the
+values that triggers it.
 
 ## 4. Hooks in jddoesdev_core.tokens.inc
 
