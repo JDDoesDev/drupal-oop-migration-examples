@@ -1,0 +1,144 @@
+<?php
+
+/**
+ * @file
+ * Site-wide tweaks for the JD Does Dev site.
+ */
+
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function jddoesdev_core_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.jddoesdev_core':
+      return '<p>' . t('Site-wide tweaks and glue code for the JD Does Dev site.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function jddoesdev_core_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'node_article_form' || $form_id == 'node_article_edit_form') {
+    $name = \Drupal::currentUser()->getDisplayName();
+    $form['title']['widget'][0]['value']['#description'] = t('@name, keep article titles under 70 characters so they fit in search results.', ['@name' => $name]);
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function jddoesdev_core_module_implements_alter(&$implementations, $hook) {
+  // Our form_alter has to run after everything else, see #3012.
+  if ($hook == 'form_alter' && isset($implementations['jddoesdev_core'])) {
+    $group = $implementations['jddoesdev_core'];
+    unset($implementations['jddoesdev_core']);
+    $implementations['jddoesdev_core'] = $group;
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function jddoesdev_core_preprocess_node(array &$variables) {
+  $node = $variables['node'];
+  if ($node->bundle() != 'blog_post' || $variables['view_mode'] != 'full') {
+    return;
+  }
+  $text = strip_tags((string) $node->get('field_content')->value);
+  $minutes = max(1, (int) ceil(str_word_count($text) / 200));
+  $variables['content']['jddoesdev_reading_time'] = [
+    '#markup' => '<p class="reading-time">' . t('@count min read', ['@count' => $minutes]) . '</p>',
+    '#weight' => -100,
+  ];
+}
+
+/**
+ * Implements hook_node_presave().
+ */
+function jddoesdev_core_entity_presave(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() != 'node') {
+    return;
+  }
+  $entity->setTitle(_jddoesdev_core_clean_title($entity->getTitle()));
+
+  if ($entity->bundle() == 'article' && $entity->get('field_description')->isEmpty() && !$entity->get('field_content')->isEmpty()) {
+    $text = strip_tags($entity->get('field_content')->value);
+    $entity->set('field_description', Unicode::truncate(trim($text), 200, TRUE, TRUE));
+  }
+
+  \Drupal::logger('jddoesdev_core')->notice('%title saved by %user.', [
+    '%title' => $entity->label(),
+    '%user' => \Drupal::currentUser()->getAccountName(),
+  ]);
+}
+
+/**
+ * Tidies whitespace in a node title.
+ */
+function _jddoesdev_core_clean_title($title) {
+  return preg_replace('/\s+/', ' ', trim($title));
+}
+
+/**
+ * Implements hook_cron().
+ */
+function jddoesdev_core_cron() {
+  // Temporary fix: purge the old import log until the table is gone everywhere.
+  // We stopped creating it in 2018 but some environments still have it.
+  $database = \Drupal::database();
+  if (!$database->schema()->tableExists('jddoesdev_import_log')) {
+    return;
+  }
+  $database->delete('jddoesdev_import_log')
+    ->condition('created', \Drupal::time()->getRequestTime() - 30 * 86400, '<')
+    ->execute();
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function jddoesdev_core_page_attachments(array &$attachments) {
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => ['name' => 'built-by', 'content' => 'jddoesdev'],
+    ],
+    'jddoesdev_core_built_by',
+  ];
+}
+
+function jddoesdev_core_mail_alter(&$message) {
+  $footer = \Drupal::state()->get('jddoesdev_core.mail_footer');
+  if (!$footer) {
+    return;
+  }
+  foreach ($message['body'] as $line) {
+    if (str_contains((string) $line, $footer)) {
+      return;
+    }
+  }
+  $message['body'][] = $footer;
+}
+
+// Guard against a fatal on sites that still have the old jddoesdev_access
+// module enabled, which declared this same function. See #2954.
+if (!function_exists('jddoesdev_core_node_access')) {
+
+  /**
+   * Implements hook_node_access().
+   */
+  function jddoesdev_core_node_access($node, $op, $account) {
+    if ($op == 'delete' && $node->bundle() == 'project' && !$account->hasPermission('administer nodes')) {
+      return AccessResult::forbidden()->cachePerPermissions();
+    }
+    return AccessResult::neutral();
+  }
+
+}

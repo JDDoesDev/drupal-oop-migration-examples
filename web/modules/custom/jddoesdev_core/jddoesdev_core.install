@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for jddoesdev_core.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function jddoesdev_core_install() {
+  \Drupal::state()->set('jddoesdev_core.mail_footer', 'Sent from the JD Does Dev site.');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function jddoesdev_core_uninstall() {
+  \Drupal::state()->delete('jddoesdev_core.mail_footer');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function jddoesdev_core_requirements($phase) {
+  $requirements = array();
+  if ($phase == 'runtime') {
+    // Added after the 2019 incident where stack traces showed on live.
+    if (\Drupal::config('system.logging')->get('error_level') == 'verbose') {
+      $requirements['jddoesdev_core_error_level'] = [
+        'title' => t('Error message display'),
+        'value' => t('Verbose'),
+        'description' => t('Error messages, including backtraces, are shown to site visitors. Switch this off on production.'),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Set the default mail footer for sites installed before it existed.
+ */
+function jddoesdev_core_update_8001() {
+  if (!\Drupal::state()->get('jddoesdev_core.mail_footer')) {
+    \Drupal::state()->set('jddoesdev_core.mail_footer', 'Sent from the JD Does Dev site.');
+  }
+}

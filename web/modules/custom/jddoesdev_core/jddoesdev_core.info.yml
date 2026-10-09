@@ -1,0 +1,5 @@
+name: 'JD Does Dev Core'
+type: module
+description: 'Site-wide tweaks and glue code that did not fit anywhere else.'
+package: Custom
+core_version_requirement: ^11.3 || ^12
