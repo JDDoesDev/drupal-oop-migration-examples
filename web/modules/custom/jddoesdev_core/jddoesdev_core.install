@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for jddoesdev_core.
  */
 
+// These hooks have no #[Hook] attribute equivalent, so they stay procedural.
+
 /**
  * Implements hook_install().
  */

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Drupal\jddoesdev_core\Hook;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -19,6 +22,7 @@ class JddoesdevCoreEntityHooks {
   public function __construct(
     protected readonly AccountInterface $currentUser,
     protected readonly LoggerChannelFactoryInterface $loggerFactory,
+    protected readonly ModuleHandlerInterface $moduleHandler,
   ) {}
 
   /**
@@ -64,6 +68,22 @@ class JddoesdevCoreEntityHooks {
       '%title' => $entity->label(),
       '%user' => $this->currentUser->getAccountName(),
     ]);
+  }
+
+  /**
+   * Implements hook_node_access().
+   */
+  #[Hook('node_access')]
+  public function nodeAccess(NodeInterface $node, string $op, AccountInterface $account): AccessResultInterface {
+    // Sites that still have the old jddoesdev_access module enabled get their
+    // project access rules from there. See #2954.
+    if ($this->moduleHandler->moduleExists('jddoesdev_access')) {
+      return AccessResult::neutral();
+    }
+    if ($op == 'delete' && $node->bundle() == 'project' && !$account->hasPermission('administer nodes')) {
+      return AccessResult::forbidden()->cachePerPermissions();
+    }
+    return AccessResult::neutral();
   }
 
   /**
