@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -18,16 +17,6 @@ function jddoesdev_core_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.jddoesdev_core':
       return '<p>' . t('Site-wide tweaks and glue code for the JD Does Dev site.') . '</p>';
-  }
-}
-
-/**
- * Implements hook_form_alter().
- */
-function jddoesdev_core_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if ($form_id == 'node_article_form' || $form_id == 'node_article_edit_form') {
-    $name = \Drupal::currentUser()->getDisplayName();
-    $form['title']['widget'][0]['value']['#description'] = t('@name, keep article titles under 70 characters so they fit in search results.', ['@name' => $name]);
   }
 }
 
