@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+
 /**
  * @file
  * Install, update and uninstall functions for jddoesdev_core.
@@ -31,7 +33,7 @@ function jddoesdev_core_requirements($phase) {
         'title' => t('Error message display'),
         'value' => t('Verbose'),
         'description' => t('Error messages, including backtraces, are shown to site visitors. Switch this off on production.'),
-        'severity' => REQUIREMENT_WARNING,
+        'severity' => RequirementSeverity::Warning,
       ];
     }
   }
