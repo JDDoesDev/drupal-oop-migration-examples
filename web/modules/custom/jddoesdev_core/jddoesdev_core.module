@@ -6,43 +6,6 @@
  */
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Routing\RouteMatchInterface;
-
-/**
- * Implements hook_help().
- */
-function jddoesdev_core_help($route_name, RouteMatchInterface $route_match) {
-  switch ($route_name) {
-    case 'help.page.jddoesdev_core':
-      return '<p>' . t('Site-wide tweaks and glue code for the JD Does Dev site.') . '</p>';
-  }
-}
-
-/**
- * Implements hook_page_attachments().
- */
-function jddoesdev_core_page_attachments(array &$attachments) {
-  $attachments['#attached']['html_head'][] = [
-    [
-      '#tag' => 'meta',
-      '#attributes' => ['name' => 'built-by', 'content' => 'jddoesdev'],
-    ],
-    'jddoesdev_core_built_by',
-  ];
-}
-
-function jddoesdev_core_mail_alter(&$message) {
-  $footer = \Drupal::state()->get('jddoesdev_core.mail_footer');
-  if (!$footer) {
-    return;
-  }
-  foreach ($message['body'] as $line) {
-    if (str_contains((string) $line, $footer)) {
-      return;
-    }
-  }
-  $message['body'][] = $footer;
-}
 
 // Guard against a fatal on sites that still have the old jddoesdev_access
 // module enabled, which declared this same function. See #2954.

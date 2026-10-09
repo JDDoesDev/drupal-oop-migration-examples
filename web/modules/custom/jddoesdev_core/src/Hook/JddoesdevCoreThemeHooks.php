@@ -31,4 +31,18 @@ class JddoesdevCoreThemeHooks {
     ];
   }
 
+  /**
+   * Implements hook_page_attachments().
+   */
+  #[Hook('page_attachments')]
+  public function pageAttachments(array &$attachments): void {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'meta',
+        '#attributes' => ['name' => 'built-by', 'content' => 'jddoesdev'],
+      ],
+      'jddoesdev_core_built_by',
+    ];
+  }
+
 }
